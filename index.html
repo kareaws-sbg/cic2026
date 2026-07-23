@@ -1,0 +1,2297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Cloud Innovators Challenge 2026 — A cloud innovation hackathon by KARE AWS Student Builder Group. Build • Innovate • Deploy." />
+  <title>Cloud Innovators Challenge 2026 | KARE AWS Student Builder Group</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy: #0b1120;
+      --navy-light: #111827;
+      --navy-card: rgba(17, 24, 39, 0.65);
+      --purple: #7c3aed;
+      --purple-light: #a78bfa;
+      --purple-glow: rgba(124, 58, 237, 0.35);
+      --orange: #ff9900;
+      --orange-light: #ffb84d;
+      --orange-glow: rgba(255, 153, 0, 0.3);
+      --white: #f8fafc;
+      --gray: #94a3b8;
+      --gray-dark: #64748b;
+      --glass: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-hover: rgba(255, 255, 255, 0.08);
+      --radius: 16px;
+      --radius-lg: 24px;
+      --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ── Animated Background ── */
+    .bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .bg-gradient {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 10%, rgba(124, 58, 237, 0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(255, 153, 0, 0.1) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
+        var(--navy);
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: float 20s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 500px; height: 500px;
+      background: rgba(124, 58, 237, 0.15);
+      top: -10%; left: -5%;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 400px; height: 400px;
+      background: rgba(255, 153, 0, 0.1);
+      bottom: 10%; right: -5%;
+      animation-delay: -7s;
+    }
+
+    .orb-3 {
+      width: 300px; height: 300px;
+      background: rgba(59, 130, 246, 0.12);
+      top: 50%; left: 40%;
+      animation-delay: -14s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -40px) scale(1.05); }
+      66% { transform: translate(-20px, 20px) scale(0.95); }
+    }
+
+    .grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 70%);
+    }
+
+    /* ── Layout ── */
+    .wrapper { position: relative; z-index: 1; }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section { padding: 100px 0; }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 16px;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 24px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--orange), var(--purple));
+      border-radius: 2px;
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--white) 0%, var(--gray) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-subtitle {
+      color: var(--gray);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin-bottom: 48px;
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 16px 0;
+      transition: var(--transition);
+    }
+
+    .navbar.scrolled {
+      background: rgba(11, 17, 32, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 12px 0;
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--white);
+    }
+
+    .nav-logo {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      border-radius: 0;
+      overflow: visible;
+    }
+
+    .nav-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .nav-brand-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      line-height: 1.2;
+    }
+
+    .nav-brand-text span {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--gray);
+      letter-spacing: 0.05em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--gray);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: color var(--transition);
+    }
+
+    .nav-links a:hover { color: var(--white); }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--orange), #e88b00);
+      color: var(--navy) !important;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-weight: 600 !important;
+    }
+
+    .nav-cta:hover { opacity: 0.9; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 120px 0 80px;
+      position: relative;
+    }
+
+    .hero-content {
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* KARE + AWS Branding Bar */
+    .brand-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 28px;
+      padding: 0;
+      background: none;
+      border: none;
+      border-radius: 0;
+      margin-bottom: 40px;
+      animation: fadeDown 0.8s ease both;
+    }
+
+    .brand-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-item.kare { min-width: auto; }
+    .brand-item.aws { min-width: auto; }
+
+    .brand-divider {
+      width: 1px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .brand-icon {
+      width: auto;
+      height: auto;
+      border-radius: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .brand-icon img {
+      width: auto;
+      height: 72px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .brand-icon.aws {
+      width: auto;
+      height: auto;
+      border-radius: 0;
+      justify-content: center;
+      background: none;
+      padding: 0;
+    }
+
+    .brand-icon.aws img {
+      width: auto;
+      height: 58px;
+      object-fit: contain;
+      padding: 0;
+      background: none;
+    }
+
+    .brand-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-align: left;
+      line-height: 1.2;
+    }
+
+    .brand-name small {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--gray);
+      letter-spacing: 0.04em;
+    }
+
+    /* Animated Type */
+    .hero-badge {
+      display: inline-block;
+      padding: 6px 18px;
+      background: rgba(124, 58, 237, 0.15);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--purple-light);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      animation: fadeDown 0.8s ease 0.1s both;
+    }
+
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 8px;
+      animation: fadeDown 0.8s ease 0.2s both;
+    }
+
+    .hero-title .line {
+      display: block;
+      overflow: hidden;
+    }
+
+    .hero-title .word {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--white) 30%, var(--purple-light) 70%, var(--orange) 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s ease-in-out infinite;
+    }
+
+    .hero-title .year {
+      display: inline-block;
+      color: var(--orange);
+      -webkit-text-fill-color: var(--orange);
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { background-position: 0% center; }
+      50% { background-position: 200% center; }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 153, 0, 0.3)); }
+      50% { filter: drop-shadow(0 0 20px rgba(255, 153, 0, 0.6)); }
+    }
+
+    /* Typewriter Tagline */
+    .hero-tagline {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      font-weight: 500;
+      color: var(--gray);
+      margin-bottom: 12px;
+      min-height: 2em;
+      animation: fadeDown 0.8s ease 0.35s both;
+    }
+
+    .typewriter {
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    .typewriter-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 1.1em;
+      background: var(--orange);
+      margin-left: 2px;
+      vertical-align: text-bottom;
+      animation: blink 0.8s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .hero-organizer {
+      font-size: 0.95rem;
+      color: var(--gray-dark);
+      margin-bottom: 48px;
+      animation: fadeDown 0.8s ease 0.45s both;
+    }
+
+    .hero-organizer strong {
+      color: var(--purple-light);
+      font-weight: 600;
+    }
+
+    /* Countdown */
+    .countdown-wrapper {
+      margin-bottom: 40px;
+      animation: fadeDown 0.8s ease 0.55s both;
+    }
+
+    .countdown-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 16px;
+    }
+
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .countdown-item {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 16px 24px;
+      min-width: 90px;
+      text-align: center;
+      transition: transform var(--transition), border-color var(--transition);
+    }
+
+    .countdown-item:hover {
+      transform: translateY(-4px);
+      border-color: rgba(124, 58, 237, 0.3);
+    }
+
+    .countdown-value {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .countdown-unit {
+      font-size: 0.7rem;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+    }
+
+    .countdown-soon {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--orange);
+      letter-spacing: 0.05em;
+    }
+
+    /* Hero Buttons */
+    .hero-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      animation: fadeDown 0.8s ease 0.65s both;
+    }
+
+    .hero-services {
+      margin-top: 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      animation: fadeDown 0.8s ease 0.75s both;
+    }
+
+    .service-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .service-chip::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--orange);
+      box-shadow: 0 0 10px rgba(255, 153, 0, 0.5);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--orange), #e88b00);
+      color: var(--navy);
+      box-shadow: 0 4px 24px var(--orange-glow);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px var(--orange-glow);
+    }
+
+    .btn-primary:disabled,
+    .btn-disabled {
+      background: rgba(255, 153, 0, 0.25);
+      color: rgba(255, 255, 255, 0.5);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(8px);
+    }
+
+    .btn-outline:hover {
+      background: var(--glass-hover);
+      border-color: rgba(124, 58, 237, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* Scroll indicator */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--gray);
+      font-size: 0.75rem;
+      animation: fadeDown 1s ease 1s both;
+    }
+
+    .scroll-mouse {
+      width: 24px;
+      height: 38px;
+      border: 2px solid var(--glass-border);
+      border-radius: 12px;
+      position: relative;
+    }
+
+    .scroll-mouse::after {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 8px;
+      background: var(--orange);
+      border-radius: 4px;
+      animation: scroll-bounce 2s ease infinite;
+    }
+
+    @keyframes scroll-bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+      50% { transform: translateX(-50%) translateY(8px); opacity: 0.3; }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Glass Card ── */
+    .glass-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 32px;
+      transition: all var(--transition);
+    }
+
+    .glass-card:hover {
+      background: var(--glass-hover);
+      border-color: rgba(124, 58, 237, 0.25);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    /* ── Registration Status ── */
+    .status-section { padding: 60px 0; }
+
+    .status-card {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 48px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .status-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--purple), var(--orange), var(--purple));
+      background-size: 200% auto;
+      animation: shimmer 3s linear infinite;
+    }
+
+    .status-icon {
+      display: inline-block;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--orange-light);
+      border: 1px solid rgba(255, 153, 0, 0.35);
+      padding: 6px 12px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    .status-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 24px;
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.3);
+      border-radius: 100px;
+      font-weight: 600;
+      color: #fbbf24;
+      margin-bottom: 20px;
+      font-size: 1.05rem;
+    }
+
+    .status-dot {
+      width: 10px; height: 10px;
+      background: #fbbf24;
+      border-radius: 50%;
+      animation: pulse-dot 2s ease infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.5); }
+      50% { box-shadow: 0 0 0 8px rgba(251, 191, 36, 0); }
+    }
+
+    .status-text {
+      color: var(--gray);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    /* ── About ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+
+    .about-text p {
+      color: var(--gray);
+      margin-bottom: 16px;
+      font-size: 1.05rem;
+    }
+
+    .about-features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .about-feature {
+      padding: 24px;
+      text-align: center;
+    }
+
+    .about-feature-icon {
+      font-size: 0.86rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--orange-light);
+      background: rgba(255, 153, 0, 0.12);
+      border: 1px solid rgba(255, 153, 0, 0.28);
+      border-radius: 999px;
+      padding: 6px 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+
+    .about-feature h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .about-feature p {
+      font-size: 0.8rem;
+      color: var(--gray);
+    }
+
+    /* ── Event Structure ── */
+    .rounds-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    .round-card { position: relative; overflow: hidden; }
+
+    .round-number {
+      position: absolute;
+      top: 24px; right: 24px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 4rem;
+      font-weight: 800;
+      color: rgba(255, 255, 255, 0.04);
+      line-height: 1;
+    }
+
+    .round-label {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .round-label.workshop {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+    }
+
+    .round-label.hackathon {
+      background: rgba(124, 58, 237, 0.15);
+      color: var(--purple-light);
+    }
+
+    .round-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .round-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .round-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--gray);
+      font-size: 0.95rem;
+    }
+
+    .round-list li::before {
+      content: '▸';
+      color: var(--orange);
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .round1-agenda {
+      margin-top: 40px;
+    }
+
+    .agenda-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .agenda-header h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .agenda-header p {
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+
+    .agenda-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .agenda-item {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 20px;
+      padding: 20px 24px;
+      align-items: start;
+    }
+
+    .agenda-time {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--orange-light);
+      line-height: 1.4;
+      padding-top: 2px;
+    }
+
+    .agenda-body h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--white);
+    }
+
+    .agenda-speaker {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      color: var(--purple-light);
+      background: rgba(124, 58, 237, 0.15);
+      border: 1px solid rgba(124, 58, 237, 0.28);
+    }
+
+    .agenda-body p {
+      color: var(--gray);
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .agenda-item.break {
+      background: rgba(255, 153, 0, 0.04);
+      border-color: rgba(255, 153, 0, 0.18);
+    }
+
+    .agenda-item.break .agenda-time {
+      color: #fbbf24;
+    }
+
+    /* ── Eligibility ── */
+    .eligibility-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .eligibility-card {
+      text-align: center;
+      padding: 32px 20px;
+    }
+
+    .eligibility-icon {
+      width: 56px; height: 56px;
+      margin: 0 auto 16px;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(255, 153, 0, 0.15));
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--orange-light);
+      letter-spacing: 0.03em;
+    }
+
+    .eligibility-card h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    /* ── Guidelines ── */
+    .guidelines-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .guideline-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 20px;
+    }
+
+    .guideline-check {
+      flex-shrink: 0;
+      width: 24px; height: 24px;
+      background: rgba(34, 197, 94, 0.15);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4ade80;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .guideline-card p {
+      font-size: 0.9rem;
+      color: var(--gray);
+      line-height: 1.5;
+    }
+
+    /* ── Prizes ── */
+    .prizes-top {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .prize-card {
+      text-align: center;
+      padding: 40px 24px;
+      position: relative;
+    }
+
+    .prize-card.featured {
+      border-color: rgba(255, 153, 0, 0.3);
+      background: rgba(255, 153, 0, 0.05);
+    }
+
+    .prize-card.featured::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: var(--radius-lg);
+      padding: 1px;
+      background: linear-gradient(135deg, var(--orange), var(--purple));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .prize-medal { font-size: 3rem; margin-bottom: 12px; }
+
+    .prize-rank {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .prize-desc {
+      font-size: 0.85rem;
+      color: var(--gray);
+      line-height: 1.5;
+    }
+
+    .special-awards {
+      text-align: center;
+      padding: 40px;
+      margin-bottom: 24px;
+    }
+
+    .special-awards h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .awards-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .award-tag {
+      padding: 8px 20px;
+      background: rgba(124, 58, 237, 0.12);
+      border: 1px solid rgba(124, 58, 237, 0.25);
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--purple-light);
+      transition: all var(--transition);
+    }
+
+    .award-tag:hover {
+      background: rgba(124, 58, 237, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .prize-note {
+      text-align: center;
+      padding: 16px 32px;
+      background: rgba(255, 153, 0, 0.08);
+      border: 1px solid rgba(255, 153, 0, 0.2);
+      border-radius: 12px;
+      color: var(--orange-light);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    /* ── Why Participate ── */
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .why-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 20px;
+    }
+
+    .why-number {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(255, 153, 0, 0.2));
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--orange-light);
+      margin-top: 1px;
+    }
+
+    .why-card p {
+      color: var(--gray);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    /* ── Timeline ── */
+    .timeline {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto;
+      padding-left: 40px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--purple), var(--orange), var(--purple));
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 40px;
+    }
+
+    .timeline-item:last-child { padding-bottom: 0; }
+
+    .timeline-dot {
+      position: absolute;
+      left: -33px;
+      top: 4px;
+      width: 14px; height: 14px;
+      background: var(--navy);
+      border: 2px solid var(--orange);
+      border-radius: 50%;
+      z-index: 1;
+      transition: all var(--transition);
+    }
+
+    .timeline-item:hover .timeline-dot {
+      background: var(--orange);
+      box-shadow: 0 0 16px var(--orange-glow);
+    }
+
+    .timeline-content h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .timeline-content p {
+      font-size: 0.85rem;
+      color: var(--gray);
+    }
+
+    .timeline-content .timeline-date {
+      font-size: 0.75rem;
+      color: var(--orange);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+    }
+
+    /* ── FAQ ── */
+    .faq-list {
+      max-width: 750px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .faq-item {
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 24px;
+      background: none;
+      border: none;
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: color var(--transition);
+    }
+
+    .faq-question:hover { color: var(--orange-light); }
+
+    .faq-chevron {
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      transition: transform var(--transition);
+      color: var(--gray);
+    }
+
+    .faq-item.active .faq-chevron {
+      transform: rotate(180deg);
+      color: var(--orange);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.4s ease;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 200px;
+    }
+
+    .faq-answer p {
+      padding: 0 24px 20px;
+      color: var(--gray);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    /* ── Contact ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .contact-info h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .contact-info > p {
+      color: var(--gray);
+      margin-bottom: 32px;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: var(--white);
+      transition: all var(--transition);
+    }
+
+    .contact-link:hover {
+      background: var(--glass-hover);
+      border-color: rgba(124, 58, 237, 0.3);
+      transform: translateX(4px);
+    }
+
+    .contact-link-icon {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(255, 153, 0, 0.15));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      flex-shrink: 0;
+    }
+
+    .contact-link-text span {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--gray);
+      font-weight: 500;
+    }
+
+    .contact-link-text strong {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .contact-visual {
+      text-align: center;
+      padding: 48px;
+    }
+
+    .contact-visual-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+    }
+
+    .contact-visual h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .contact-visual p {
+      color: var(--gray);
+      font-size: 0.9rem;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      padding: 36px 0;
+      border-top: 1px solid var(--glass-border);
+      text-align: left;
+    }
+
+    .footer-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 0;
+    }
+
+    .footer-logo {
+      width: auto;
+      height: auto;
+      background: none;
+      border-radius: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+      border: none;
+      flex-shrink: 0;
+    }
+
+    .footer-logo img {
+      width: auto;
+      height: 48px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .footer-meta {
+      text-align: right;
+    }
+
+    .footer-text {
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin-bottom: 4px;
+      line-height: 1.5;
+    }
+
+    .footer-text strong {
+      color: var(--purple-light);
+    }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--gray-dark);
+    }
+
+    /* ── Scroll Reveal ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .eligibility-grid { grid-template-columns: repeat(2, 1fr); }
+      .guidelines-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      section { padding: 72px 0; }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0; right: 0;
+        flex-direction: column;
+        gap: 0;
+        background: rgba(11, 17, 32, 0.95);
+        backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--glass-border);
+        padding: 16px 24px;
+      }
+
+      .nav-links.open { display: flex; }
+
+      .nav-links li { width: 100%; }
+
+      .nav-links a {
+        display: block;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--glass-border);
+      }
+
+      .hamburger { display: flex; }
+
+      .brand-bar {
+        flex-direction: column;
+        gap: 18px;
+        padding: 0;
+        border-radius: 0;
+      }
+
+      .brand-item.kare,
+      .brand-item.aws {
+        min-width: auto;
+        width: auto;
+        justify-content: center;
+      }
+
+      .brand-icon img {
+        height: 64px;
+      }
+
+      .brand-icon.aws img {
+        height: 48px;
+        max-width: min(90vw, 320px);
+      }
+
+      .brand-divider {
+        width: 48px;
+        height: 1px;
+      }
+
+      .about-grid,
+      .rounds-grid,
+      .contact-grid { grid-template-columns: 1fr; }
+
+      .agenda-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .about-features { grid-template-columns: 1fr 1fr; }
+
+      .prizes-top { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: 1fr; }
+
+      .eligibility-grid { grid-template-columns: 1fr 1fr; }
+
+      .guidelines-grid { grid-template-columns: 1fr; }
+
+      .countdown-item {
+        min-width: 70px;
+        padding: 12px 16px;
+      }
+
+      .countdown-value { font-size: 1.5rem; }
+
+      .hero { padding: 100px 0 60px; }
+
+      .scroll-indicator { display: none; }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+      }
+
+      .footer-meta {
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .eligibility-grid { grid-template-columns: 1fr; }
+      .about-features { grid-template-columns: 1fr; }
+      .hero-buttons { flex-direction: column; align-items: center; }
+      .btn { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-canvas" aria-hidden="true">
+    <div class="bg-gradient"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <div class="wrapper">
+
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+      <div class="container nav-inner">
+        <a href="#" class="nav-brand">
+          <div class="nav-logo">
+            <img src="./aws-logo.png" alt="KARE logo" />
+          </div>
+          <div class="nav-brand-text">
+            Cloud Innovators Challenge 2026
+            <span>Build • Innovate • Deploy</span>
+          </div>
+        </a>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#about">About</a></li>
+          <li><a href="#structure">Structure</a></li>
+          <li><a href="#prizes">Prizes</a></li>
+          <li><a href="#timeline">Timeline</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <div class="container hero-content">
+
+        <!-- KARE + AWS Branding -->
+        <div class="brand-bar">
+          <div class="brand-item kare">
+            <div class="brand-icon kare">
+              <img src="./kare-logo.png" alt="KARE logo" />
+            </div>
+            <div class="brand-name">
+              KARE
+              <small>Kalasalingam Academy of Research and Education</small>
+            </div>
+          </div>
+          <div class="brand-divider"></div>
+          <div class="brand-item aws">
+            <div class="brand-icon aws">
+              <img src="./aws-logo.png" alt="AWS Student Builder Group logo" />
+            </div>
+            <div class="brand-name">
+              KARE AWS Student Builder Group
+              <small>StudentCommunity</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-badge">AWS Cloud Challenge 2026</div>
+
+        <h1 class="hero-title">
+          <span class="line"><span class="word">Cloud Innovators</span></span>
+          <span class="line">Challenge <span class="year">2026</span></span>
+        </h1>
+
+        <p class="hero-tagline">
+          <span class="typewriter" id="typewriter"></span><span class="typewriter-cursor"></span>
+        </p>
+
+        <p class="hero-organizer">
+          Organized by <strong>KARE AWS Student Builder Group</strong>
+        </p>
+
+        <!-- Countdown Placeholder -->
+        <div class="countdown-wrapper">
+          <div class="countdown-label">Event Dates </div>
+          <div class="countdown" id="countdown">
+            <div class="countdown-soon">26 July 2026 & 29th  August 2026</div>
+          </div>
+        </div>
+
+        <div class="hero-buttons">
+          <button class="btn btn-primary btn-disabled" disabled>
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+            Register Now — Coming Soon
+          </button>
+          <a href="#guidelines" class="btn btn-outline">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            View Guidelines
+          </a>
+        </div>
+        <div class="hero-services">
+          <span class="service-chip">EC2</span>
+          <span class="service-chip">S3</span>
+          <span class="service-chip">IAM</span>
+          <span class="service-chip">Lambda</span>
+          <span class="service-chip">API Gateway</span>
+          <span class="service-chip">Bedrock</span>
+          <span class="service-chip">CloudWatch</span>
+        </div>
+      </div>
+
+      <div class="scroll-indicator">
+        <div class="scroll-mouse"></div>
+        Scroll to explore
+      </div>
+    </section>
+
+    <!-- Registration Status -->
+    <section class="status-section" id="status">
+      <div class="container">
+        <div class="glass-card status-card reveal">
+          <div class="status-icon">STATUS</div>
+          <h2 class="status-title">Registration Status</h2>
+          <div class="status-badge">
+            <span class="status-dot"></span>
+            Registration Opening Soon
+          </div>
+          <p class="status-text">
+            Registration portal will open on the 24th of July 2026<br />
+            Stay tuned for the official announcement.<br /><br />
+            Registration Fee: <strong>Rs. 350 per participant</strong><br />
+            Team Size: <strong>Exactly 4 members</strong><br />
+            Maximum Teams: <strong>60</strong> (registrations close once this limit is reached)
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-text reveal">
+            <div class="section-label">About the Event</div>
+            <h2 class="section-title">Where Innovation Meets the Cloud</h2>
+            <p>
+              <strong>Cloud Innovators Challenge 2026</strong> is a two-round cloud innovation hackathon designed to encourage students to solve real-world problems using <strong>AWS Cloud</strong>, <strong>Artificial Intelligence</strong>, and emerging technologies.
+            </p>
+            <p>
+              Participants will attend a comprehensive workshop followed by an intense hackathon where they build innovative cloud-based solutions, present their prototypes, and compete for exciting prizes.
+            </p>
+          </div>
+          <div class="about-features reveal">
+            <div class="glass-card about-feature">
+              <div class="about-feature-icon">EC2</div>
+              <h4>Compute Layer</h4>
+              <p>Deploy scalable applications on cloud compute</p>
+            </div>
+            <div class="glass-card about-feature">
+              <div class="about-feature-icon">S3</div>
+              <h4>Storage Layer</h4>
+              <p>Design secure data pipelines and object storage</p>
+            </div>
+            <div class="glass-card about-feature">
+              <div class="about-feature-icon">Lambda</div>
+              <h4>Serverless Build</h4>
+              <p>Build event-driven services with fast iteration</p>
+            </div>
+            <div class="glass-card about-feature">
+              <div class="about-feature-icon">AI</div>
+              <h4>AI Integration</h4>
+              <p>Use modern AI services for real-world impact</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Event Structure -->
+    <section id="structure">
+      <div class="container">
+        <div class="text-center reveal" style="text-align:center;">
+          <div class="section-label" style="justify-content:center;">Event Structure</div>
+          <h2 class="section-title">Two Rounds of Excellence</h2>
+          <p class="section-subtitle" style="margin:0 auto 48px;">Learn, build, and innovate across two exciting rounds</p>
+        </div>
+        <div class="rounds-grid">
+          <div class="glass-card round-card reveal">
+            <span class="round-number">01</span>
+            <span class="round-label workshop">Round 1</span>
+            <h3>Cloud Workshop & Technical Challenge</h3>
+            <ul class="round-list">
+              <li>Date: 26 July 2026</li>
+              <li>Time: 09:00 AM to 06:00 PM</li>
+              <li>Duration: 9 Hours</li>
+              <li>Sessions, live AWS demo & quizzes</li>
+              <li>AWS Card Tower Challenge</li>
+              <li>Hackathon theme reveal & briefing</li>
+              <li>Idea brainstorming for Round 2</li>
+            </ul>
+          </div>
+          <div class="glass-card round-card reveal">
+            <span class="round-number">02</span>
+            <span class="round-label hackathon">Round 2</span>
+            <h3>Hackathon</h3>
+            <ul class="round-list">
+              <li>Date: 29 to 30 August 2026 (Tentative)</li>
+              <li>Starts: 04:00 PM, 29 Aug 2026</li>
+              <li>Ends: 06:00 PM, 30 Aug 2026</li>
+              <li>Duration: 26 Hours</li>
+              <li>Team-based innovation challenge</li>
+              <li>Build a working prototype</li>
+              <li>Mentorship support throughout</li>
+              <li>Final presentation and demo</li>
+              <li>Evaluation by industry experts</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="round1-agenda reveal">
+          <div class="agenda-header">
+            <div>
+              <div class="section-label">Round 1 Agenda</div>
+              <h3>26 July 2026 — Full Day Schedule</h3>
+            </div>
+            <p>09:00 AM to 06:00 PM</p>
+          </div>
+
+          <div class="agenda-list">
+            <div class="glass-card agenda-item">
+              <div class="agenda-time">09:00 AM – 09:30 AM</div>
+              <div class="agenda-body">
+                <h4>Registration & Inauguration Ceremony</h4>
+                <p>Welcome address, inauguration, introduction to the KARE AWS Student Builder Group and event overview.</p>
+              </div>
+            </div>
+
+            <div class="glass-card agenda-item">
+              <div class="agenda-time">09:30 AM – 10:30 AM</div>
+              <div class="agenda-body">
+                <h4>Session 1: Introduction to Cloud Computing & AWS</h4>
+                <span class="agenda-speaker">Talk by: NISCHAL S TUMBETI</span>
+                <p>Introduction to Cloud Computing, Why Cloud, Why AWS, AWS Global Infrastructure and core AWS services with real world use cases.</p>
+              </div>
+            </div>
+
+            <div class="glass-card agenda-item break">
+              <div class="agenda-time">10:30 AM – 10:45 AM</div>
+              <div class="agenda-body">
+                <h4>Tea & Refreshment Break</h4>
+                <p>Networking & refreshments.</p>
+              </div>
+            </div>
+
+            <div class="glass-card agenda-item">
+              <div class="agenda-time">10:45 AM – 12:00 PM</div>
+              <div class="agenda-body">
+                <h4>Cloud Quiz Challenge</h4>
+                <p>Interactive quiz based on the morning sessions. The Top 3 teams qualify for the AWS Card Tower Challenge.</p>
+              </div>
+            </div>
+
+            <div class="glass-card agenda-item break">
+              <div class="agenda-time">12:00 PM – 01:00 PM</div>
+              <div class="agenda-body">
+                <h4>Lunch Break</h4>
+                <p>Lunch & Networking.</p>
+              </div>
+            </div>
+
+            <div class="glass-card agenda-item">
+              <div class="agenda-time">01:00 PM – 02:15 PM</div>
+              <div class="agenda-body">
+                <h4>Session 2: Modern Cloud Applications</h4>
+                <p>Understanding Frontend, Backend, Databases, APIs, application architecture and how AWS powers modern cloud applications.</p>
+              </div>
+            </div>
+
+            <div class="glass-card agenda-item break">
+              <div class="agenda-time">02:15 PM – 02:25 PM</div>
+              <div class="agenda-body">
+                <h4>Refreshment Break</h4>
+                <p>Tea, coffee and networking.</p>
+              </div>
+            </div>
+
+            <div class="glass-card agenda-item">
+              <div class="agenda-time">02:25 PM – 03:10 PM</div>
+              <div class="agenda-body">
+                <h4>Live AWS Demonstration</h4>
+                <p>Demonstration of the AWS Console, EC2, S3, Lambda, IAM, API Gateway and deployment concepts.</p>
+              </div>
+            </div>
+
+            <div class="glass-card agenda-item">
+              <div class="agenda-time">03:10 PM – 03:25 PM</div>
+              <div class="agenda-body">
+                <h4>AWS Card Tower Challenge (Final Round)</h4>
+                <p>The Top 3 teams from the Cloud Quiz compete in the AWS Card Tower Challenge.</p>
+              </div>
+            </div>
+
+            <div class="glass-card agenda-item">
+              <div class="agenda-time">03:25 PM – 03:45 PM</div>
+              <div class="agenda-body">
+                <h4>Prize Distribution & Hackathon Theme Reveal</h4>
+                <p>Announcement of Quiz and Card Tower Challenge winners, followed by the Hackathon theme and problem statement reveal.</p>
+              </div>
+            </div>
+
+            <div class="glass-card agenda-item">
+              <div class="agenda-time">03:45 PM – 04:45 PM</div>
+              <div class="agenda-body">
+                <h4>Hackathon Briefing</h4>
+                <p>Rules, evaluation criteria, timeline, deliverables, submission guidelines and Q&A.</p>
+              </div>
+            </div>
+
+            <div class="glass-card agenda-item">
+              <div class="agenda-time">04:45 PM – 06:00 PM</div>
+              <div class="agenda-body">
+                <h4>Idea Brainstorming</h4>
+                <p>Team discussions, interaction, project ideation and preparation for Hackathon.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Eligibility -->
+    <section id="eligibility">
+      <div class="container">
+        <div class="text-center reveal" style="text-align:center;">
+          <div class="section-label" style="justify-content:center;">Eligibility</div>
+          <h2 class="section-title">Who Can Participate?</h2>
+          <p class="section-subtitle" style="margin:0 auto 48px;">Open to all passionate innovators at KARE</p>
+        </div>
+        <div class="eligibility-grid">
+          <div class="glass-card eligibility-card reveal">
+            <div class="eligibility-icon">KARE</div>
+            <h4>Open to all KARE students</h4>
+          </div>
+          <div class="glass-card eligibility-card reveal">
+            <div class="eligibility-icon">4</div>
+            <h4>Teams of 4 members</h4>
+          </div>
+          <div class="glass-card eligibility-card reveal">
+            <div class="eligibility-icon">1</div>
+            <h4>One registration per team</h4>
+          </div>
+          <div class="glass-card eligibility-card reveal">
+            <div class="eligibility-icon">XD</div>
+            <h4>Cross-department teams allowed</h4>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Guidelines -->
+    <section id="guidelines">
+      <div class="container">
+        <div class="text-center reveal" style="text-align:center;">
+          <div class="section-label" style="justify-content:center;">Guidelines</div>
+          <h2 class="section-title">Event Guidelines</h2>
+          <p class="section-subtitle" style="margin:0 auto 48px;">Please read and follow these rules carefully</p>
+        </div>
+        <div class="guidelines-grid">
+          <div class="glass-card guideline-card reveal">
+            <div class="guideline-check">•</div>
+            <p>Teams must have exactly 4 members</p>
+          </div>
+          <div class="glass-card guideline-card reveal">
+            <div class="guideline-check">•</div>
+            <p>Only the Team Leader can register</p>
+          </div>
+          <div class="glass-card guideline-card reveal">
+            <div class="guideline-check">•</div>
+            <p>Each student can participate in only one team</p>
+          </div>
+          <div class="glass-card guideline-card reveal">
+            <div class="guideline-check">•</div>
+            <p>Projects must be original</p>
+          </div>
+          <div class="glass-card guideline-card reveal">
+            <div class="guideline-check">•</div>
+            <p>Maintain professional conduct</p>
+          </div>
+          <div class="glass-card guideline-card reveal">
+            <div class="guideline-check">•</div>
+            <p>Decisions of judges are final</p>
+          </div>
+          <div class="glass-card guideline-card reveal">
+            <div class="guideline-check">•</div>
+            <p>Bring your college ID card</p>
+          </div>
+          <div class="glass-card guideline-card reveal">
+            <div class="guideline-check">•</div>
+            <p>Internet and power will be provided</p>
+          </div>
+          <div class="glass-card guideline-card reveal">
+            <div class="guideline-check">•</div>
+            <p>Laptops are mandatory</p>
+          </div>
+          <div class="glass-card guideline-card reveal">
+            <div class="guideline-check">•</div>
+            <p>Follow event schedule strictly</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Participate -->
+    <section id="why-participate">
+      <div class="container">
+        <div class="text-center reveal" style="text-align:center;">
+          <div class="section-label" style="justify-content:center;">Why Participate?</div>
+          <h2 class="section-title">Build Skills, Earn Recognition</h2>
+          <p class="section-subtitle" style="margin:0 auto 48px;">A high-impact learning and innovation journey for KARE students</p>
+        </div>
+        <div class="why-grid">
+          <div class="glass-card why-card reveal">
+            <div class="why-number">1</div>
+            <p>Learn AWS Cloud technologies through an intensive hands-on workshop.</p>
+          </div>
+          <div class="glass-card why-card reveal">
+            <div class="why-number">2</div>
+            <p>Claim 1 credit under Experiential Elective for 4th year and 3rd year student participants.</p>
+          </div>
+          <div class="glass-card why-card reveal">
+            <div class="why-number">3</div>
+            <p>Build real-world cloud solutions within a 26-hour hackathon and enhance problem-solving and cloud development skills.</p>
+          </div>
+          <div class="glass-card why-card reveal">
+            <div class="why-number">4</div>
+            <p>Win exciting prizes worth Rs. 15,000.</p>
+          </div>
+          <div class="glass-card why-card reveal">
+            <div class="why-number">5</div>
+            <p>Receive participation and winner certificates, plus AWS goodies.</p>
+          </div>
+          <div class="glass-card why-card reveal">
+            <div class="why-number">6</div>
+            <p>Network with fellow cloud enthusiasts and developers.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Prizes -->
+    <section id="prizes">
+      <div class="container">
+        <div class="text-center reveal" style="text-align:center;">
+          <div class="section-label" style="justify-content:center;">Prize Pool</div>
+          <h2 class="section-title">Rewards & Recognition</h2>
+          <p class="section-subtitle" style="margin:0 auto 48px;">Compete for exciting prizes and AWS goodies</p>
+        </div>
+        <div class="prizes-top">
+          <div class="glass-card prize-card reveal">
+            <div class="prize-medal">🥈</div>
+            <div class="prize-rank">Second Prize</div>
+            <p class="prize-desc">Rs. 4,500 + Certificates + AWS Goodies</p>
+          </div>
+          <div class="glass-card prize-card featured reveal">
+            <div class="prize-medal">🥇</div>
+            <div class="prize-rank">First Prize</div>
+            <p class="prize-desc">Rs. 8,000 + Trophy + Certificates + AWS Goodies</p>
+          </div>
+          <div class="glass-card prize-card reveal">
+            <div class="prize-medal">🥉</div>
+            <div class="prize-rank">Third Prize</div>
+            <p class="prize-desc">Rs. 2,500 + Certificates + AWS Goodies</p>
+          </div>
+        </div>
+        <div class="glass-card special-awards reveal">
+          <h3>Special Awards</h3>
+          <div class="awards-tags">
+            <span class="award-tag">Best Innovation</span>
+            <span class="award-tag">Best Cloud Solution</span>
+            <span class="award-tag">Best AI Project</span>
+            <span class="award-tag">Best UI/UX</span>
+            <span class="award-tag">Best Social Impact</span>
+          </div>
+        </div>
+        <div class="prize-note reveal">
+          Total Hackathon Prize Pool: Rs. 15,000
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section id="timeline">
+      <div class="container">
+        <div class="text-center reveal" style="text-align:center;">
+          <div class="section-label" style="justify-content:center;">Timeline</div>
+          <h2 class="section-title">Event Schedule</h2>
+          <p class="section-subtitle" style="margin:0 auto 48px;">Important event milestones and tentative schedule</p>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item reveal">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-date">Coming Soon</div>
+              <h4>Registrations Opening Soon</h4>
+              <p>Registration fee: Rs. 350 per participant | Maximum 60 teams</p>
+            </div>
+          </div>
+          <div class="timeline-item reveal">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-date">26 Jul 2026 | 09:00 AM to 06:00 PM</div>
+              <h4>AWS Workshop</h4>
+              <p>Cloud Workshop & Technical Challenge (9 Hours)</p>
+            </div>
+          </div>
+          <div class="timeline-item reveal">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-date">29 Aug 2026 | Starts 04:00 PM</div>
+              <h4>Hackathon</h4>
+              <p>Round 2 kickoff with team-based cloud solution development</p>
+            </div>
+          </div>
+          <div class="timeline-item reveal">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-date">30 Aug 2026 | Ends 06:00 PM</div>
+              <h4>Final Presentation</h4>
+              <p>Final presentations, demos, and judging after 26 hours</p>
+            </div>
+          </div>
+          <div class="timeline-item reveal">
+            <div class="timeline-dot"></div>
+            <div class="timeline-content">
+              <div class="timeline-date">TBA</div>
+              <h4>Winner Announcement</h4>
+              <p>Prizes, certificates, and awards ceremony</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <div class="container">
+        <div class="text-center reveal" style="text-align:center;">
+          <div class="section-label" style="justify-content:center;">FAQ</div>
+          <h2 class="section-title">Frequently Asked Questions</h2>
+          <p class="section-subtitle" style="margin:0 auto 48px;">Everything you need to know</p>
+        </div>
+        <div class="faq-list">
+          <div class="glass-card faq-item reveal">
+            <button class="faq-question">
+              Who can participate?
+              <svg class="faq-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="faq-answer"><p>All students currently enrolled at KARE are eligible to participate. Cross-department teams are also welcome.</p></div>
+          </div>
+          <div class="glass-card faq-item reveal">
+            <button class="faq-question">
+              How many members per team?
+              <svg class="faq-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="faq-answer"><p>Each team must have exactly 4 members. No more, no less.</p></div>
+          </div>
+          <div class="glass-card faq-item reveal">
+            <button class="faq-question">
+              Is there any registration fee?
+              <svg class="faq-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="faq-answer"><p>Yes. The registration fee is Rs. 350 per participant.</p></div>
+          </div>
+          <div class="glass-card faq-item reveal">
+            <button class="faq-question">
+              Will certificates be provided?
+              <svg class="faq-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="faq-answer"><p>Yes! All participants will receive certificates. Winners and special award recipients will receive additional certificates and trophies.</p></div>
+          </div>
+          <div class="glass-card faq-item reveal">
+            <button class="faq-question">
+              What should participants bring?
+              <svg class="faq-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="faq-answer"><p>Participants must bring their own laptop, college ID card, and enthusiasm! Internet and power supply will be provided at the venue.</p></div>
+          </div>
+          <div class="glass-card faq-item reveal">
+            <button class="faq-question">
+              When will registrations open?
+              <svg class="faq-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="faq-answer"><p>Registrations are opening soon! Follow our social media channels and check this page for the official announcement.</p></div>
+          </div>
+          <div class="glass-card faq-item reveal">
+            <button class="faq-question">
+              Is there a maximum number of teams?
+              <svg class="faq-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="faq-answer"><p>Yes. A maximum of 60 teams can participate. Registrations will close once this limit is reached.</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+      <div class="container">
+        <div class="contact-grid">
+          <div class="contact-info reveal">
+            <div class="section-label">Contact</div>
+            <h3>KARE AWS Student Builder Group</h3>
+            <p>For queries and more information, reach out to us:</p>
+            <div class="contact-links">
+              <a href="mailto:awscloudclub@klu.ac.in" class="contact-link">
+                <div class="contact-link-icon">MAIL</div>
+                <div class="contact-link-text">
+                  <span>Email</span>
+                  <strong>awscloudclub@klu.ac.in</strong>
+                </div>
+              </a>
+              <a href="https://instagram.com/kare_aws.cloudclub" target="_blank" rel="noopener" class="contact-link">
+                <div class="contact-link-icon">IG</div>
+                <div class="contact-link-text">
+                  <span>Instagram</span>
+                  <strong>@kare_aws.cloudclub</strong>
+                </div>
+              </a>
+            </div>
+          </div>
+          <div class="glass-card contact-visual reveal">
+            <div class="contact-visual-icon">☁️</div>
+            <h4>Cloud Innovators Challenge 2026</h4>
+            <p>Build • Innovate • Deploy<br />Powered by AWS & KARE</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="./aws-logo.png" alt="AWS Student Builder Group logo" />
+          </div>
+        </div>
+        <div class="footer-meta">
+          <p class="footer-text">
+            Designed and Developed by <strong>KARE AWS Student Builder Group</strong>
+          </p>
+          <p class="footer-copy">© 2026 All Rights Reserved</p>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // ── Navbar scroll effect ──
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // ── Mobile menu ──
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => navLinks.classList.remove('open'));
+    });
+
+    // ── Typewriter effect ──
+    const phrases = [
+      'Build • Innovate • Deploy',
+      'Architect with AWS Services',
+      'Deploy with EC2 • S3 • Lambda',
+      'Innovate with AI and Cloud'
+    ];
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    const typewriterEl = document.getElementById('typewriter');
+    const typeSpeed = 80;
+    const deleteSpeed = 40;
+    const pauseTime = 2000;
+
+    function typeEffect() {
+      const current = phrases[phraseIndex];
+      if (isDeleting) {
+        typewriterEl.textContent = current.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        typewriterEl.textContent = current.substring(0, charIndex + 1);
+        charIndex++;
+      }
+
+      let speed = isDeleting ? deleteSpeed : typeSpeed;
+
+      if (!isDeleting && charIndex === current.length) {
+        speed = pauseTime;
+        isDeleting = true;
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        speed = 500;
+      }
+
+      setTimeout(typeEffect, speed);
+    }
+    typeEffect();
+
+    // ── Scroll reveal ──
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+    revealEls.forEach(el => revealObserver.observe(el));
+
+    // ── FAQ accordion ──
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const isActive = item.classList.contains('active');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+        if (!isActive) item.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
